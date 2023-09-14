@@ -11,7 +11,8 @@ const pinia = createPinia();
 
 
 const mainStore = useMainStore(pinia);
-await mainStore.fetch("main")
+
+mainStore.fetch("main")
 
 const fetchCustomers = async () => {
     try {
@@ -22,7 +23,8 @@ const fetchCustomers = async () => {
       console.error('Error fetching user data:', error);
     }
   };
-await fetchCustomers()
+  
+fetchCustomers()
 mainStore.setDeviceType();
 
 createApp(App).use(router).use(pinia).mount("#app");

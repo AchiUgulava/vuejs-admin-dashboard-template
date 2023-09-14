@@ -84,8 +84,8 @@ export default {
       router.push(`/user/${username}`);
     };
 
-    onMounted(() => {
-      // fetchCustomers();
+    onMounted(async () => {
+      mainStore.users.length>2 || await fetchCustomers();
       console.log(import.meta.env.VITE_API_ENDPOINT)
     });
 
