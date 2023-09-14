@@ -1,0 +1,74 @@
+{
+    "data": {
+    "userEngagement": {
+      "totalInteractions": {"daily":"1234","average":"1233"},
+      "averageMessagesPerChat": 10, 
+      "averageChatsPerUser": 5, 
+      "totalConversationDuration": "15:30:00" 
+    },
+    "userSatisfaction": {
+      "averageLikesPerChat": 3, 
+      "averageDislikesPerChat": 1,
+      "likeDislikeRatio": 3 
+    },
+    "usage": {
+      "totalUsers": 567,
+      "activeUsers": {
+        "hourly": [10, 20, 30],
+        "daily": [100, 200, 300],
+        "weekly": [800, 900, 1000]
+      },
+      "commonUserQueries": [
+        "How to reset password",
+        "Product availability",
+        "Pricing information"
+      ]
+    },
+    "performance": {
+      "averageResponseTime": "00:00:02",
+      "errorRate": 0.03
+    },
+    "conversion": {
+      "conversionRate": 0.12,
+      "revenueGenerated": 5000
+    },
+    "userDemographics": {
+      "userLocation": {
+        "usa": 60,
+        "europe": 25,
+        "asia": 15
+      },
+      "userDevices": {
+        "mobile": 45,
+        "desktop": 55
+      }
+    },
+    "trafficSources": {
+      "sources": {
+        "website": 70,
+        "mobileApp": 20,
+        "socialMedia": 10
+      },
+      "referralSources": {
+        "direct": 50,
+        "search": 30,
+        "social": 20
+      }
+    },
+    "botPerformance": {
+      "intentsRecognitionAccuracy": 0.92,
+      "entityRecognitionAccuracy": 0.85,
+      "conversationFlowAnalysis": {
+        "step1": 1000,
+        "step2": 800,
+        "step3": 600,
+        "step4": 400
+      }
+    },
+    "securityAndCompliance": {
+      "numberOfSecurityIncidents": 2,
+      "complianceStatus": "Compliant"
+    }
+}
+}
+  
