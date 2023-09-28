@@ -86,7 +86,7 @@ export const useMainStore = defineStore("main", {
         country: "",
         device_type: "",
         email: "",
-        user: "",
+        user: "loading...",
       }
     ],
     previewTimestamp: "Weekly",

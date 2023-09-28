@@ -14,7 +14,7 @@
             <!-- Display user data here -->
             <UserCard :userData="userData"/>
             <!-- Add more user information as needed -->
-            <List v-if="userChats" :usr="userData.user" :chats="userChats"/>
+            <List v-if="userChats" :usr="userData.id" :chats="userChats"/>
             <div v-else>
               <p>Loading...</p>
             </div>
@@ -48,7 +48,7 @@ onMounted(async () => {
   // Get the username from the route parameter
   const username = route.params.id; // Use route.params to access the parameter
   // Check if the user is already in mainstore.users
-  const userInStore = mainstore.users.find((user) => user.user === username);
+  const userInStore = mainstore.users.find((user) => user.id === username);
     userData.value = userInStore;
     console.log(userInStore)
 
