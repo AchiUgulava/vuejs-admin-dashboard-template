@@ -18,64 +18,13 @@ export default {
     const page = ref(0);
 
     const incrementPage = async (bool) => {
-      bool ? page.value++ : page.value > 0 && page.value--;
+      bool ? (page.value+1)*50 < totalNumOfUsers.value && page.value++ : page.value > 0 && page.value--;
       await retrieveData(page.value)
     }
     const totalNumOfUsers = ref(0)
 
-    // const retrieveData = async (page) => {
-    //   try {
-    //     console.log(sortBy.value.name);
-
-    //     const usersCollection = db.collection("users");
-
-    //     let query = usersCollection;
-
-    //     if (sortBy.value.name) {
-    //       // const [field, direction] = sortBy.split(":");
-    //       // query = query.orderBy(field, direction === "desc" ? "desc" : "asc");
-    //       query = query.orderBy(sortBy.value.name , sortBy.value.asc?  "asc" : "desc");
-    //     }
-
-    //     if (page) {
-    //       try{
-
-    //         const startAfterDoc = await usersCollection
-    //         .orderBy(sortBy.value.name || "createdAt")
-    //         .limit((page) * 50)
-    //         .get()
-    //         .then((snapshot) => snapshot.docs[snapshot.docs.length - 1]);
-
-    //         query = query.startAfter(startAfterDoc);
-    //       }
-    //       catch(err){
-    //           console.log(err)
-    //       }
-    //     }
-    //     try{
-
-    //       const querySnapshot = await query.limit(50).get();
-
-    //       const usersArray = [];
-    //       querySnapshot.forEach((doc) => {
-    //         usersArray.push({ id: doc.id, ...doc.data() });
-    //       });
-
-    //       console.log(sortBy.value.name, usersArray);
-    //       customers.value = usersArray;
-    //       mainStore.users = usersArray;
-    //     }
-    //     catch(err){
-    //     console.error(err);
-
-    //     }
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // };
-
     const retrieveData = async () => {
-      getDocumentCount(sortBy.value.name)
+      await getDocumentCount(sortBy.value.name)
       try {
         const usersCollection = db.collection('users');
         let query = usersCollection;
@@ -88,7 +37,7 @@ export default {
             .then((snapshot) => snapshot.docs[snapshot.docs.length - 1].data());
           // .then((snapshot) => snapshot.docs[snapshot.docs.length - 1].data().sortBy.value.name);
             console.log(startAfterDoc)
-          query = query.orderBy(sortBy.value.name, direction).startAfter(startAfterDoc.email);
+          query = query.orderBy(sortBy.value.name, direction).startAfter(startAfterDoc.email||startAfterDoc.id||startAfterDoc.name);
         } else {
           query = query.orderBy(sortBy.value.name, direction);
         }
@@ -151,11 +100,7 @@ export default {
     }
 
     onMounted(async () => {
-      mainStore.users.length > 2 || await retrieveData();
-      console.log(import.meta.env.VITE_API_ENDPOINT)
-      
-
-
+      await retrieveData();
     });
 
     return {
@@ -196,7 +141,7 @@ export default {
             class="text-xs font-semibold uppercase dark:text-slate-500 bg-slate-50 dark:bg-slate-700 dark:bg-opacity-50">
             <tr>
               <th class="p-2 whitespace-nowrap ">
-                <div class="font-semibold text-left flex cursor-pointer  " @click="handleSortBy(0)">
+                <div class="font-semibold text-left flex cursor-pointer  " @click="handleSortBy(1)">
                   <p>name</p>
                   <div v-if="sortBy.name == columns[0]" :class="sortBy.asc && 'pt-1'">
 
@@ -325,7 +270,9 @@ export default {
     <img @click="incrementPage(false)" src="/src/images/icon-02.svg" alt="prev" class="rotate-180"
       :class="page === 0 ? 'opacity-30 cursor-default' : 'cursor-pointer'">
     <h1 class="text-2xl w-16 text-center">{{ page + 1 }}</h1>
-    <img @click="incrementPage(true)" src="/src/images/icon-02.svg" alt="net" class="cursor-pointer">
+    <img @click="incrementPage(true)" src="/src/images/icon-02.svg" alt="net" class="cursor-pointer"
+    :class="(page+1)*50 > totalNumOfUsers ? 'opacity-30 cursor-default' : 'cursor-pointer'"
+    >
 
   </div>
 </template>
