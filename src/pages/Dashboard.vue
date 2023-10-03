@@ -110,13 +110,15 @@ import DashboardCard13 from '../partials/dashboard/DashboardCard13.vue'
 import EngagementCard from '../partials/dashboard/EngagementCard.vue'
 import CountryCard from '../partials/dashboard/CountryCard.vue'
 import DeviceCard from '../partials/dashboard/DeviceCard.vue'
-const mainstore = useMainStore();
+const mainStore = useMainStore();
 const userEngagement = ref(null)
 const userActivity = ref(null)
 
-onMounted(() => {
-  userEngagement.value = mainstore.main.userEngagement;
-  userActivity.value = mainstore.main.usage;
+onMounted( async() => {
+  await mainStore.getTotalUsers();
+
+  userEngagement.value = mainStore.main.userEngagement;
+  userActivity.value = mainStore.main.usage;
 });
 
 const sidebarOpen = ref(false)

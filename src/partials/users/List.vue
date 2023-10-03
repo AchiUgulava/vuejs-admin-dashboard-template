@@ -18,7 +18,7 @@ export default {
     const page = ref(0);
 
     const incrementPage = async (bool) => {
-      bool ? (page.value+1)*50 < totalNumOfUsers.value && page.value++ : page.value > 0 && page.value--;
+      bool ? (page.value + 1) * 50 < totalNumOfUsers.value && page.value++ : page.value > 0 && page.value--;
       await retrieveData(page.value)
     }
     const totalNumOfUsers = ref(0)
@@ -28,7 +28,7 @@ export default {
       try {
         const usersCollection = db.collection('users');
         let query = usersCollection;
-        const direction = sortBy.value.asc ?  "asc":"desc"
+        const direction = sortBy.value.asc ? "asc" : "desc"
         if (page.value > 0) {
           const startAfterDoc = await usersCollection
             .orderBy(sortBy.value.name, direction)
@@ -36,8 +36,8 @@ export default {
             .get()
             .then((snapshot) => snapshot.docs[snapshot.docs.length - 1].data());
           // .then((snapshot) => snapshot.docs[snapshot.docs.length - 1].data().sortBy.value.name);
-            console.log(startAfterDoc)
-          query = query.orderBy(sortBy.value.name, direction).startAfter(startAfterDoc.email||startAfterDoc.id||startAfterDoc.name);
+          console.log(startAfterDoc)
+          query = query.orderBy(sortBy.value.name, direction).startAfter(startAfterDoc.email || startAfterDoc.id || startAfterDoc.name);
         } else {
           query = query.orderBy(sortBy.value.name, direction);
         }
@@ -51,6 +51,12 @@ export default {
         customers.value = usersArray;
         mainStore.users = usersArray;
         console.log(usersArray);
+        function getJSONSize(json) {
+          return new Blob([json], { type: 'application/json' }).size;
+        }
+
+        let json = JSON.stringify(usersArray);
+        console.log(getJSONSize(json));
       } catch (error) {
         console.error(error);
         return [];
@@ -59,7 +65,7 @@ export default {
 
     const getDocumentCount = async (orderByField) => {
       const query = db.collection('users').orderBy(orderByField);
-      try{
+      try {
 
         const snapshot = await query.get();
         const count = snapshot.size;
@@ -67,7 +73,7 @@ export default {
         totalNumOfUsers.value = count
         return count;
       }
-      catch(err){
+      catch (err) {
         console.log(err)
       }
     };
@@ -271,8 +277,7 @@ export default {
       :class="page === 0 ? 'opacity-30 cursor-default' : 'cursor-pointer'">
     <h1 class="text-2xl w-16 text-center">{{ page + 1 }}</h1>
     <img @click="incrementPage(true)" src="/src/images/icon-02.svg" alt="net" class="cursor-pointer"
-    :class="(page+1)*50 > totalNumOfUsers ? 'opacity-30 cursor-default' : 'cursor-pointer'"
-    >
+      :class="(page + 1) * 50 > totalNumOfUsers ? 'opacity-30 cursor-default' : 'cursor-pointer'">
 
   </div>
 </template>

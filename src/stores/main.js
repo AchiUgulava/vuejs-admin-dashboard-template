@@ -1,4 +1,6 @@
 import { defineStore } from "pinia";
+import { db } from "../firebaseInit.js";
+
 import axios from "axios";
 
 export const useMainStore = defineStore("main", {
@@ -120,6 +122,40 @@ export const useMainStore = defineStore("main", {
           alert(error.message);
         });
     },
+    async getTotalUsers () {
+      const query = db.collection('users');
+      try {
+
+        const snapshot = await query.get();
+        const count = snapshot.size;
+        console.log(count)
+        this.main.usage.totalUsers = count;
+      }
+      catch (err) {
+        console.log(err)
+      }
+    },
+    getCurrentTimestamp() {
+      const now = new Date();
+      const seconds = Math.floor(now.getTime() / 1000);
+      return { seconds: seconds, nanoseconds: 0 };
+    },
+    
+    async getTodaysUsers() {
+      const query = db.collection('users');
+      const today = this.getCurrentTimestamp();
+      
+      try {
+        const snapshot = await query.where('registration_date', '>', today).get();
+        const count = snapshot.size;
+        console.log(count)
+        this.main.totalInteractions.daily = count;
+        
+      }
+      catch (err) {
+        console.log(err)
+      }
+    },    
     setDeviceType() {
       const platform = navigator.platform.toLowerCase();
       if (

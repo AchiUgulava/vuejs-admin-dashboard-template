@@ -21,8 +21,8 @@
       <div class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase mb-1">user engagement today</div>
       <div class="flex items-start">
         <div class="text-xl font-semibold text-slate-400 dark:text-slate-500 uppercase mt-1">Number of users: </div>
-        <div class="text-3xl font-bold text-slate-800 dark:text-slate-100 mr-2">{{ userEngagement.averageMessagesPerChat }}</div>
-        <div class="text-sm font-semibold text-white px-1.5 bg-emerald-500 rounded-full mt-2">+49%</div>
+        <div class="text-3xl font-bold text-slate-800 dark:text-slate-100 mr-2">{{ userEngagement.totalInteractions.daily }}</div>
+        <!-- <div class="text-sm font-semibold text-white px-1.5 bg-emerald-500 rounded-full mt-2">+49%</div> -->
       </div>
     </div>
     <div class="grow max-sm:max-h-[128px] xl:max-h-[128px]">
@@ -35,8 +35,11 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import LineChart from '../../charts/LineChart01.vue'
+import { useMainStore } from '../../stores/main';
 import { tailwindConfig, hexToRGB } from '../../utils/Utils'
 
+
+const mainStore = useMainStore();
 const props = defineProps({
   userEngagement:{
     type:Object,
@@ -99,6 +102,8 @@ const props = defineProps({
         },
       ],
     })
-
+onMounted(async()=>{
+  await mainStore.getTodaysUsers();
+})
 
 </script>

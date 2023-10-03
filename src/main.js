@@ -26,6 +26,7 @@ const fetchCustomers = async () => {
   };
   
 fetchCustomers()
-mainStore.setDeviceType();
 
+
+mainStore.setDeviceType();
 createApp(App).use(router).use(pinia).mount("#app");
