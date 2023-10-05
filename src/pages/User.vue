@@ -51,6 +51,13 @@ onMounted(async () => {
   const userInStore = mainstore.users.find((user) => user.id === username);
     userData.value = userInStore;
     console.log(userInStore)
+    if(!userInStore){
+      userData.value={chat_ids: [],
+    country: '',
+    device_type:'',
+    email: username,
+    id: username}
+    }
 
     try {
       const apiUrl = 'https://dboard.chatftw.com/api/chats/user';

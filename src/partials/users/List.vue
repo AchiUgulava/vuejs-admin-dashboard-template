@@ -32,7 +32,7 @@ export default {
         if (page.value > 0) {
           const startAfterDoc = await usersCollection
             .orderBy(sortBy.value.name, direction)
-            .limit((page.value) * 50)
+            // .limit((page.value) * 50)
             .get()
             .then((snapshot) => snapshot.docs[snapshot.docs.length - 1].data());
           // .then((snapshot) => snapshot.docs[snapshot.docs.length - 1].data().sortBy.value.name);
@@ -42,7 +42,8 @@ export default {
           query = query.orderBy(sortBy.value.name, direction);
         }
 
-        const querySnapshot = await query.limit(50).get();
+        const querySnapshot = await query.get();
+        // const querySnapshot = await query.limit(50).get();
 
         const usersArray = [];
         querySnapshot.forEach((doc) => {
