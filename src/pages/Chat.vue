@@ -13,7 +13,7 @@
                     <div v-if="chat">
                         <div class="py-2 px-4 w-fit mb-8 ml-4 text-green-500 bg-white dark:bg-slate-800 shadow-lg rounded-sm border border-slate-200 dark:border-slate-700">
 
-                            <router-link :to="`/user/${chat.user}`" class="flex flex-nowrap">
+                            <router-link :to="`/user/${email}/`" class="flex flex-nowrap">
                                 <svg class="w-4 h-4 mt-2 shrink-0 ml-1 fill-current rotate-90"
                                 viewBox="0 0 12 12">
                                 <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z"></path>
@@ -26,7 +26,7 @@
                         <div
                             class="mx-auto max-w-7xl gap-10 flex justify-around flex-wrap overflow-hidden p-10 mb-10 bg-white dark:bg-slate-800 shadow-lg rounded-sm border border-slate-200 dark:border-slate-700 dark:text-white text-black">
                             <h1 class="lg:text-xl">Name: <span class="text-green-500"> {{ chat.chat_name }} </span></h1>
-                            <p class="lg:text-lg">UserName: <span class="text-green-500">{{ chat.user }} </span></p>
+                            <p class="lg:text-lg">email: <span class="text-green-500">{{ chat.email }} </span></p>
                             <p class="lg:text-lg">errorRate: <span class="text-green-500">{{ chat.errorRate }}</span></p>
                             <p class="lg:text-lg">lastAccessed: <span class="text-green-500">{{ new
                                 Date(chat.lastAccessed).toLocaleString() }}</span></p>
@@ -35,12 +35,12 @@
                             </p>
                         </div>
                         <!-- Display user data here -->
-                        <div v-for="message in chat.messages.slice().reverse()">
+                        <div v-for="message in chat.Messages.slice().reverse()">
                             <div class="w-full py-5 shadow-lg"
                                 :class="message.likeStatus === 'like' ? 'bg-green-500/20' : message.likeStatus === 'dislike' ? 'bg-red-500/20' : message.sender === 'user' ? 'bg-white dark:bg-slate-800' : ''">
-                                <p class="max-w-3xl mx-auto ">{{ message.content }}</p>
-                                <p class="max-w-3xl mx-auto text-end text-black dark:text-white text-xs">{{ new
-                                    Date(message.time).toLocaleString() }}</p>
+                                <p class="max-w-3xl mx-auto ">{{ message.message_content }}</p>
+                                <p class="max-w-3xl mx-auto text-end text-black dark:text-white text-xs">
+                                    {{message.time}}</p>
                             </div>
                         </div>
                     </div>
@@ -65,31 +65,33 @@ const mainstore = useMainStore();
 // Define a ref for user data
 const chat = ref(null)
 const route = useRoute(); // Use useRoute to access route information
-
+const email = ref("");
 onMounted(async () => {
-    const username = route.params.usr;
+    email.value = route.params.usr;
     const chatId = route.params.id;
-    console.log(username, chatId)
+    console.log(email.value, chatId)
+    const postData = {
+    email: email.value
+  };
+  const apiUrl = import.meta.env.VITE_API_ENDPOINT + '/users/getByEmail';
+  await axios.post(apiUrl, postData)
+    .then(function (response) {
+      console.log(response)
+      const userChats = response.data.Chats;
+        chat.value = userChats.find((chat) => chat.chat_id == chatId)
+        console.log(chat.value)
+      })
+    .catch(function (error) {
+      console.error(error);
+      return "err"
+    });
+}
+    
+);
 
-    try {
-        const apiUrl = 'https://dboard.chatftw.com/api/chats/user';
-        const payload = {
-            username: username
-        };
-        const response = await axios.post(apiUrl, payload);
-        if (response.status === 200) {
-            const userChats = response.data;
-            chat.value = userChats.find((chat) => chat.chat_id == chatId)
-
-        } else {
-            console.error('Error fetching user data');
-        }
-    } catch (error) {
-        console.error('Error fetching user data:', error);
-    }
-
-
-});
+const fetchUser = async (email) => {
+  
+};
 
 const sidebarOpen = ref(false);
 </script>

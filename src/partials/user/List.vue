@@ -29,14 +29,14 @@
             <tr v-for="chat in chats" :key="chat.id" @click.prevent="redirectToChat(chat.chat_id)" class="cursor-pointer hover:opacity-80 hover:bg-slate-50 dark:hover:bg-slate-700">
               <td class="p-2 whitespace-nowrap">
                 <div class="flex items-center">
-                  <div class="font-medium text-slate-800 dark:text-slate-100">{{ chat.chat_name }}</div>
+                  <div class="font-medium text-slate-800 dark:text-slate-100">{{ chat.chat_name.slice(0,50) }}</div>
                 </div>
               </td>
               <td class="p-2 whitespace-nowrap">
-                <div class="text-left text-slate-800 dark:text-slate-100">{{new Date(chat.lastAccessed).toLocaleString() }}</div>
+                <div class="text-left text-slate-800 dark:text-slate-100">{{chat.last_accessed }}</div>
               </td>
               <td class="p-2 whitespace-nowrap">
-                <div class="text-left font-medium text-green-500">{{ chat.messages.length }}</div>
+                <div class="text-left font-medium text-green-500">{{ chat.Messages.length }}</div>
               </td>
               <td class="p-2 whitespace-nowrap">
                 <div class="text-left font-medium text-green-500">{{ chat.likeCount }}/{{  chat.dislikeCount  }} </div>

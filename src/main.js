@@ -17,7 +17,7 @@ mainStore.fetch("main")
 
 const fetchCustomers = async () => {
     try {
-      const apiUrl = import.meta.env.VITE_API_ENDPOINT + '/api/users';
+      const apiUrl = import.meta.env.VITE_API_ENDPOINT + '/users/getSorted';
       const response = await axios.post(apiUrl);
       mainStore.users = response.data;
     } catch (error) {
