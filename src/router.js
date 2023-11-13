@@ -8,8 +8,13 @@ const router = createRouter({
   history: routerHistory,
   routes: [
     {
-      path: '/',
+      path: '/dashboard',
       component: Dashboard,
+      
+    },
+    { 
+      path: '/',
+      redirect: '/users',
     },
     {
       path: '/users',
