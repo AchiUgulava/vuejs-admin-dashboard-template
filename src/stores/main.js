@@ -10,6 +10,14 @@ export const useMainStore = defineStore("main", {
     userEmail: null,
     userToken: null,
     userAvatar: null,
+      sortBy: {
+        name: "email",
+        asc: true,
+      },
+      page: 0,
+      filterField: "",
+      filterValue: "",
+    
     main: {
       userEngagement: {
         totalInteractions: { daily: "1234", average: "1233" },
@@ -89,7 +97,7 @@ export const useMainStore = defineStore("main", {
         device_type: "",
         email: "",
         user: "loading...",
-      }
+      },
     ],
     previewTimestamp: "Weekly",
 
@@ -122,40 +130,22 @@ export const useMainStore = defineStore("main", {
           alert(error.message);
         });
     },
-    async getTotalUsers () {
-      const query = db.collection('users');
-      try {
 
-        const snapshot = await query.get();
-        const count = snapshot.size;
-        console.log(count)
-        this.main.usage.totalUsers = count;
-      }
-      catch (err) {
-        console.log(err)
-      }
+    setUsers(users) {
+      this.users = users
     },
-    getCurrentTimestamp() {
-      const now = new Date();
-      const seconds = Math.floor(now.getTime() / 1000);
-      return { seconds: seconds, nanoseconds: 0 };
+    setSortBy(sortBy) {
+      this.sortBy = sortBy
     },
-    
-    async getTodaysUsers() {
-      const query = db.collection('users');
-      const today = this.getCurrentTimestamp();
-      
-      try {
-        const snapshot = await query.where('registration_date', '>', today).get();
-        const count = snapshot.size;
-        console.log(count)
-        this.main.totalInteractions.daily = count;
-        
-      }
-      catch (err) {
-        console.log(err)
-      }
-    },    
+    setPage(page) {
+      this.page = page
+    },
+    setFilterField(filterField) {
+      this.filterField = filterField
+    },
+    setFilterValue(filterValue) {
+      this.filterValue = filterValue
+    },
     setDeviceType() {
       const platform = navigator.platform.toLowerCase();
       if (

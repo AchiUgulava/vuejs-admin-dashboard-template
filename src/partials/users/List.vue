@@ -1,6 +1,7 @@
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
+import { storeToRefs } from 'pinia'
 import router from '../../router';
 import axios from 'axios';
 import { useMainStore } from '../../stores/main';
@@ -12,18 +13,18 @@ export default {
   },
   setup() {
     const mainStore = useMainStore();
-    const users = ref(mainStore.users);
-    const sortBy = ref({
-      name: 'email',
-      asc: true
+    const { users, sortBy, page, filterField, filterValue } = storeToRefs(mainStore)
+    watch([users, sortBy, page, filterField, filterValue], () => {
+      mainStore.setUsers(users.value);
+      mainStore.setSortBy(sortBy.value);
+      mainStore.setPage(page.value);
+      mainStore.setFilterField(filterField.value);
+      mainStore.setFilterValue(filterValue.value);
     });
-    const hi = ref("hi")
-    const filterField = ref('')
-    const filterValue = ref('')
+
     const columns = ['user_id', 'email', 'chat_count', 'timestamp', 'registration_date'];
-    const page = ref(0);
     const incrementPage = async (bool) => {
-      bool ? (page.value +1) * 50 < totalNumOfUsers.value && page.value++ : page.value > 0 && page.value--;
+      bool ? (page.value + 1) * 50 < totalNumOfUsers.value && page.value++ : page.value > 0 && page.value--;
       console.log(page.value)
       await retrieveData()
     }
@@ -64,22 +65,21 @@ export default {
 
 
     const retrieveData = async () => {
-      totalNumOfUsers.value = await getDocumentCount(filterField.value,filterValue.value)
-      if (filterField.value != "")
-      {
-        users.value = await fetchFiltered(sortBy.value.name, sortBy.value.asc, page.value,filterField.value,filterValue.value)
+      totalNumOfUsers.value = await getDocumentCount(filterField.value, filterValue.value)
+      if (filterField.value != "") {
+        users.value = await fetchFiltered(sortBy.value.name, sortBy.value.asc, page.value, filterField.value, filterValue.value)
 
       }
-      else{
+      else {
         users.value = await fetchUsers(sortBy.value.name, sortBy.value.asc, page.value)
       }
       mainStore.users = users.value;
     };
 
-    const getDocumentCount = async (filterField,filterValue) => {
+    const getDocumentCount = async (filterField, filterValue) => {
       const postData = {
-        filterField:filterField,
-        filterValue:filterValue,
+        filterField: filterField,
+        filterValue: filterValue,
       }
       const apiUrl = import.meta.env.VITE_API_ENDPOINT + '/users/count';
       return axios.post(apiUrl, postData)
@@ -138,16 +138,18 @@ export default {
   <div
     class="col-span-full xl:col-span-6 bg-white dark:bg-slate-800 shadow-lg rounded-sm border border-slate-200 dark:border-slate-700">
     <header class="px-5 py-4 border-b border-slate-100 dark:border-slate-700 sm:flex ">
-      <div class="px-3">
-        <h2 class="font-semibold text-slate-800 dark:text-slate-100">Users</h2>
-        <h3>{{ totalNumOfUsers }}</h3>
+      <div class="flex py-5">
+        <div class="px-3">
+          <h2 class="font-semibold text-slate-800 dark:text-slate-100">Users</h2>
+          <h3>{{ totalNumOfUsers }}</h3>
+        </div>
+        <SearchInput @onSearch="handleSearch" />
       </div>
-      <SearchInput @onSearch="handleSearch" />
 
-      <div class="flex w-full h-8 justify-end items-end">
+      <div class="flex w-full h-14 justify-end items-end">
         <img @click="incrementPage(false)" src="/src/images/icon-02.svg" alt="prev" class="rotate-180"
           :class="page === 1 ? 'opac                                                    ity-30 cursor-default' : 'cursor-pointer'">
-        <h1 class="text-2xl w-16 text-center">{{ page + 1 }}/{{ Math.ceil( totalNumOfUsers/ 50) }}</h1>
+        <h1 class="text-2xl w-16 text-center">{{ page + 1 }}/{{ Math.ceil(totalNumOfUsers / 50) }}</h1>
         <img @click="incrementPage(true)" src="/src/images/icon-02.svg" alt="net" class="cursor-pointer"
           :class="(page + 1) * 50 > totalNumOfUsers ? 'opacity-30 cursor-default' : 'cursor-pointer'">
 
@@ -291,12 +293,12 @@ export default {
     </div>
   </div>
   <div class="flex w-full h-8 justify-end items-end">
-        <img @click="incrementPage(false)" src="/src/images/icon-02.svg" alt="prev" class="rotate-180"
-          :class="page === 1 ? 'opac                                                    ity-30 cursor-default' : 'cursor-pointer'">
-        <h1 class="text-2xl w-16 text-center">{{ page + 1 }}</h1>
-        <img @click="incrementPage(true)" src="/src/images/icon-02.svg" alt="net" class="cursor-pointer"
-          :class="(page + 1) * 50 > totalNumOfUsers ? 'opacity-30 cursor-default' : 'cursor-pointer'">
+    <img @click="incrementPage(false)" src="/src/images/icon-02.svg" alt="prev" class="rotate-180"
+      :class="page === 1 ? 'opac                                                    ity-30 cursor-default' : 'cursor-pointer'">
+    <h1 class="text-2xl w-16 text-center">{{ page + 1 }}</h1>
+    <img @click="incrementPage(true)" src="/src/images/icon-02.svg" alt="net" class="cursor-pointer"
+      :class="(page + 1) * 50 > totalNumOfUsers ? 'opacity-30 cursor-default' : 'cursor-pointer'">
 
 
-      </div>
+  </div>
 </template>

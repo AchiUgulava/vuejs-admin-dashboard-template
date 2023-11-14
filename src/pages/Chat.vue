@@ -79,7 +79,7 @@ onMounted(async () => {
       console.log(response)
       const userChats = response.data.Chats;
         chat.value = userChats.find((chat) => chat.chat_id == chatId)
-        console.log(chat.value)
+        chat.value.Messages = sortAndPairMessages(chat.value.Messages)
       })
     .catch(function (error) {
       console.error(error);
@@ -92,6 +92,25 @@ onMounted(async () => {
 const fetchUser = async (email) => {
   
 };
+
+function sortAndPairMessages(messages) {
+    // Separate messages by sender
+    const userMessages = messages.filter(msg => msg.sender === 'user').sort((a, b) => a.timestamp - b.timestamp);
+    const chatbotMessages = messages.filter(msg => msg.sender === 'chatbot').sort((a, b) => a.timestamp - b.timestamp);
+
+    // Pair messages based on order
+    const pairedMessages = [];
+    for (let i = 0; i < Math.max(userMessages.length, chatbotMessages.length); i++) {
+        if (userMessages[i]) {
+            pairedMessages.push(userMessages[i]);
+        }
+        if (chatbotMessages[i]) {
+            pairedMessages.push(chatbotMessages[i]);
+        }
+    }
+
+    return pairedMessages;
+}
 
 const sidebarOpen = ref(false);
 </script>
