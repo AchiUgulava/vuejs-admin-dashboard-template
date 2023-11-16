@@ -12,7 +12,7 @@ export const useMainStore = defineStore("main", {
     userAvatar: null,
       sortBy: {
         name: "email",
-        asc: true,
+        asc: false,
       },
       page: 0,
       filterField: "",

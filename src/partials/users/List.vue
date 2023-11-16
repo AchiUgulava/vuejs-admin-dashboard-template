@@ -22,7 +22,7 @@ export default {
       mainStore.setFilterValue(filterValue.value);
     });
 
-    const columns = ['user_id', 'email', 'chat_count', 'timestamp', 'registration_date'];
+    const columns = ['user_id', 'email', 'chat_count','message_count', 'timestamp', 'registration_date'];
     const incrementPage = async (bool) => {
       bool ? (page.value + 1) * 50 < totalNumOfUsers.value && page.value++ : page.value > 0 && page.value--;
       console.log(page.value)
@@ -35,7 +35,7 @@ export default {
         sortby: { name: name || "last_login", asc: asc ? "asc" : "desc" },
         page: page
       };
-      const apiUrl = import.meta.env.VITE_API_ENDPOINT + '/users/getSorted';
+      const apiUrl = import.meta.env.VITE_API_ENDPOINT + '/users/getFilteredAndSorted';
       return axios.post(apiUrl, postData)
         .then(function (response) {
           return response.data;
@@ -104,7 +104,7 @@ export default {
       }
       else {
         sortBy.value.name = columns[id];
-        sortBy.value.asc = true;
+        sortBy.value.asc = false;
       }
       retrieveData()
     }
@@ -220,9 +220,28 @@ export default {
                 </div>
               </th>
               <th class="p-2 whitespace-nowrap ">
+
+
                 <div class="font-semibold text-left flex cursor-pointer  " @click="handleSortBy(3)">
-                  <p>Last Login</p>
+                  <p>message Count</p>
                   <div v-if="sortBy.name == columns[3]" :class="sortBy.asc && 'pt-1'">
+
+                    <svg v-if="sortBy.asc" class="w-3 h-3 shrink-0 ml-1 fill-current text-slate-400 rotate-180"
+                      viewBox="0 0 12 12">
+                      <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z"></path>
+                    </svg>
+
+                    <svg v-else class="w-3 h-3 shrink-0 ml-1 fill-current text-slate-400" viewBox="0 0 12 12">
+                      <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z"></path>
+                    </svg>
+
+                  </div>
+                </div>
+              </th>
+              <th class="p-2 whitespace-nowrap ">
+                <div class="font-semibold text-left flex cursor-pointer  " @click="handleSortBy(4)">
+                  <p>Last Login</p>
+                  <div v-if="sortBy.name == columns[4]" :class="sortBy.asc && 'pt-1'">
 
                     <svg v-if="sortBy.asc" class="w-3 h-3 shrink-0 ml-1 fill-current text-slate-400 rotate-180"
                       viewBox="0 0 12 12">
@@ -238,9 +257,9 @@ export default {
 
               </th>
               <th class="p-2 whitespace-nowrap ">
-                <div class="font-semibold text-left flex cursor-pointer  " @click="handleSortBy(4)">
+                <div class="font-semibold text-left flex cursor-pointer  " @click="handleSortBy(5)">
                   <p>Registered At</p>
-                  <div v-if="sortBy.name == columns[4]" :class="sortBy.asc && 'pt-1'">
+                  <div v-if="sortBy.name == columns[5]" :class="sortBy.asc && 'pt-1'">
 
                     <svg v-if="sortBy.asc" class="w-3 h-3 shrink-0 ml-1 fill-current text-slate-400 rotate-180"
                       viewBox="0 0 12 12">
@@ -272,6 +291,9 @@ export default {
               </td>
               <td class="p-2 whitespace-nowrap">
                 <div class="text-left font-medium text-green-500">{{ user.chat_count }}</div>
+              </td>
+              <td class="p-2 whitespace-nowrap">
+                <div class="text-left font-medium text-green-500">{{ user.message_count }}</div>
               </td>
               <td class="p-2 whitespace-nowrap">
                 <div v-if="user.last_login" class="text-left font-medium text-green-500">
