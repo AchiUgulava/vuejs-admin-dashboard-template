@@ -303,7 +303,7 @@ export default {
               </td>
               <td class="p-2 whitespace-nowrap">
                 <div v-if="user.registration_date" class="text-left font-medium text-green-500">
-                  {{ new Date(new Date(user.registration_date).setMinutes(new Date(user.registration_date).getMinutes() + 240)).toISOString()}}
+                  {{ new Date(new Date(user.registration_date).setMinutes(new Date(user.registration_date).getMinutes() + 480)).toISOString()}}
                 </div>
                 <div v-else class="text-left font-medium text-green-500">unknown</div>
               </td>
