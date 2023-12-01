@@ -22,7 +22,7 @@ export default {
       mainStore.setFilterValue(filterValue.value);
     });
 
-    const columns = ['user_id', 'email', 'chat_count','message_count', 'timestamp', 'registration_date'];
+    const columns = ['user_id', 'email', 'chat_count','message_count', 'last_login', 'registration_date'];
     const incrementPage = async (bool) => {
       bool ? (page.value + 1) * 50 < totalNumOfUsers.value && page.value++ : page.value > 0 && page.value--;
       console.log(page.value)
@@ -303,7 +303,7 @@ export default {
               </td>
               <td class="p-2 whitespace-nowrap">
                 <div v-if="user.registration_date" class="text-left font-medium text-green-500">
-                  {{ new Date(new Date(user.registration_date).setMinutes(new Date(user.registration_date).getMinutes() + 480)).toISOString()}}
+                  {{ new Date(new Date(user.registration_date).setMinutes(new Date(user.registration_date).getMinutes() + 240)).toISOString()}}
                 </div>
                 <div v-else class="text-left font-medium text-green-500">unknown</div>
               </td>
