@@ -297,7 +297,7 @@ export default {
               </td>
               <td class="p-2 whitespace-nowrap">
                 <div v-if="user.last_login" class="text-left font-medium text-green-500">
-                  {{ user.timestamp }}
+                  {{  new Date(new Date(user.timestamp).setMinutes(new Date(user.timestamp).getMinutes() + 240)).toISOString()  }}
                 </div>
                 <div v-else class="text-left font-medium text-green-500">unknown</div>
               </td>
